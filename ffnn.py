@@ -132,6 +132,9 @@ if __name__ == "__main__":
     model = FFNN(input_dim = len(vocab), h = args.hidden_dim)
     optimizer = optim.SGD(model.parameters(),lr=0.01, momentum=0.9)
     print("========== Training for {} epochs ==========".format(args.epochs))
+    # keep track of best validation performance
+    best_val_acc = 0.0
+    best_epoch = 0
     for epoch in range(args.epochs):
         model.train()
         optimizer.zero_grad()
@@ -190,6 +193,16 @@ if __name__ == "__main__":
         print("Validation completed for epoch {}".format(epoch + 1))
         print("Validation accuracy for epoch {}: {}".format(epoch + 1, correct / total))
         print("Validation time for this epoch: {}".format(time.time() - start_time))
+
+        # update best epoch if validation improved
+        val_acc = correct / total if total > 0 else 0.0
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            best_epoch = epoch + 1
+
+    # after training, report best epoch
+    print("=" * 40)
+    print(f"Best validation accuracy {best_val_acc:.4f} obtained at epoch {best_epoch}")
 
     # write out to results/test.out
     
