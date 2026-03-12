@@ -32,10 +32,13 @@ class FFNN(nn.Module):
 
     def forward(self, input_vector):
         # [to fill] obtain first hidden layer representation
+        hidden = self.activation(self.W1(input_vector))
 
         # [to fill] obtain output layer representation
+        output = self.W2(hidden)
 
         # [to fill] obtain probability dist.
+        predicted_vector = self.softmax(output)
 
         return predicted_vector
 
@@ -120,6 +123,11 @@ if __name__ == "__main__":
     train_data = convert_to_vector_representation(train_data, word2index)
     valid_data = convert_to_vector_representation(valid_data, word2index)
     
+    print("========== Data Statistics ==========")
+    print(f"Training examples: {len(train_data)}")
+    print(f"Validation examples: {len(valid_data)}")
+    print(f"Vocabulary size: {len(vocab)}")
+    print("=" * 40)
 
     model = FFNN(input_dim = len(vocab), h = args.hidden_dim)
     optimizer = optim.SGD(model.parameters(),lr=0.01, momentum=0.9)
